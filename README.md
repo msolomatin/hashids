@@ -3,7 +3,7 @@
 # Hashids
 
 ## Description
- C++11 port of a JavaScript library to generate YouTube-like hashids from one or many numbers.
+C++11 port of a [JavaScript library](http://hashids.org/javascript/) to generate YouTube-like hashids from one or many numbers.
 
 ## Alpha
 This library is at the earliest stage of development and a support of new commands will be added soon. Currently it supports only encode command. Library is being developed and tested on Mac OS X 10.10.5.
