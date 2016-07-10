@@ -3,6 +3,7 @@
 #include <string>
 #include <cmath>
 #include <vector>
+#include <initializer_list>
 using std::cout;
 using std::endl;
 
@@ -17,15 +18,13 @@ std::string Hashids::_consistentShuffle(std::string alphabet, std::string salt) 
     }
 
     for (i = alphabet.length() - 1, v = 0, p = 0; i > 0; i--, v++) {
-
         v %= salt.length();
-        p += integer = (int)salt[v];
+        p += integer = static_cast<int>(salt[v]);
         j = (integer + v + p) % i;
 
         temp = alphabet[j];
         alphabet = alphabet.substr(0, j) + alphabet[i] + alphabet.substr(j + 1);
         alphabet = alphabet.substr(0, i) + temp + alphabet.substr(i + 1);
-
     }
 
     return alphabet;
@@ -43,7 +42,6 @@ std::string Hashids::_encode(std::vector<int> numbers) {
 
     int number, numbersSize = numbers.size(), sepsIndex;
     for (int i = 0; i < numbers.size(); i++) {
-
         number = numbers[i];
         buffer = lottery + _salt + alphabet;
 
@@ -53,36 +51,30 @@ std::string Hashids::_encode(std::vector<int> numbers) {
         ret += last;
 
         if (i + 1 < numbersSize) {
-            number %= ((int)last[0] + i);
+            number %= (static_cast<int>(last[0]) + i);
             sepsIndex = number % _seps.length();
             ret += _seps[sepsIndex];
         }
-
     }
 
     int guardIndex;
     std::string guard;
     if (ret.length() < _minHashLength) {
-
-        guardIndex = (numbersHashInt + (int)ret[0]) % _guards.length();
+        guardIndex = (numbersHashInt + static_cast<int>(ret[0])) % _guards.length();
         guard = _guards[guardIndex];
 
         ret = guard + ret;
 
         if (ret.length() < _minHashLength) {
-
-            guardIndex = (numbersHashInt + (int)ret[2]) % _guards.length();
+            guardIndex = (numbersHashInt + static_cast<int>(ret[2])) % _guards.length();
             guard = _guards[guardIndex];
 
             ret += guard;
-
         }
-
     }
 
     int halfLength = alphabet.length() / 2, excess;
     while (ret.length() < _minHashLength) {
-
         alphabet = _consistentShuffle(alphabet, alphabet);
         ret = alphabet.substr(halfLength) + ret + alphabet.substr(0, halfLength);
 
@@ -90,7 +82,6 @@ std::string Hashids::_encode(std::vector<int> numbers) {
         if (excess > 0) {
             ret = ret.substr(excess / 2, _minHashLength);
         }
-
     }
 
     return ret;
@@ -130,8 +121,7 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
         int j = _alphabet.find(_seps[i]);
         if (j == std::string::npos) {
             _seps = _seps.substr(0, i) + " " + _seps.substr(i + 1);
-        }
-        else {
+        } else {
             _alphabet = _alphabet.substr(0, j) + " " + _alphabet.substr(j + 1);
         }
     }
@@ -141,49 +131,49 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
 
     _seps = _consistentShuffle(_seps, _salt);
 
-    if (!_seps.length() || ((double)_alphabet.length() / _seps.length()) > _sepDiv) {
-
-        int sepsLength = ceil((double)_alphabet.length() / _sepDiv);
+    if (!_seps.length() || (static_cast<double>(_alphabet.length()) / _seps.length()) > _sepDiv) {
+        int sepsLength = ceil(static_cast<double>(_alphabet.length()) / _sepDiv);
 
         if (sepsLength == 1) {
             sepsLength++;
         }
 
         if (sepsLength > _seps.length()) {
-
             int diff = sepsLength - _seps.length();
             _seps += _alphabet.substr(0, diff);
             _alphabet = _alphabet.substr(diff);
 
-        }
-        else {
+        } else {
             _seps = _seps.substr(0, sepsLength);
         }
-
     }
 
     _alphabet = _consistentShuffle(_alphabet, _salt);
 
-    int guardCount = ceil((double)_alphabet.length() / _guardDiv);
+    int guardCount = ceil(static_cast<double>(_alphabet.length()) / _guardDiv);
 
     if (_alphabet.length() < 3) {
         _guards = _seps.substr(0, guardCount);
         _seps = _seps.substr(guardCount);
-    }
-    else {
+    } else {
         _guards = _alphabet.substr(0, guardCount);
         _alphabet = _alphabet.substr(guardCount);
     }
 }
 
-std::string Hashids::encode(std::vector<int> numbers) {
+std::string Hashids::encode(int number) {
+    return _encode(std::vector<int>{number});
+}
+
+std::string Hashids::encode(std::initializer_list<int> numbers) {
     return _encode(numbers);
 }
 
 int main() {
-    auto hashids = Hashids("this is my salt", 8);
-    for (int i = 1; i <= 10; i++) {
-        cout << hashids.encode(std::vector<int>{i}) << endl;
-    }
+    auto hashids = Hashids("this is my salt");
+
+    cout << hashids.encode(12345) << endl;
+    cout << hashids.encode({1, 2, 3, 4, 5}) << endl;
+
     return 0;
 }

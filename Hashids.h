@@ -1,5 +1,9 @@
 #include <string>
 #include <vector>
+#include <initializer_list>
+
+#ifndef HASHIDS_H_
+#define HASHIDS_H_
 
 class Hashids {
 private:
@@ -11,12 +15,15 @@ private:
     int _guardDiv = 12;
     int _minHashLength = 0;
     std::string _guards;
-    
+
     std::string _consistentShuffle(std::string alphabet, std::string salt);
     std::string _encode(std::vector<int> numbers);
     std::string _hash(int input, std::string alphabet);
 
 public:
     Hashids(std::string salt, int minHashLength = 0, std::string alphabet = "");
-    std::string encode(std::vector<int> numbers);
+    std::string encode(int number);
+    std::string encode(std::initializer_list<int> numbers);
 };
+
+#endif  // HASHIDS_H_

@@ -15,6 +15,21 @@ C++11 compatible compiler.
 
 ```C++
 #include "Hashids.h"
-auto hashids = Hashids("this is my salt");
-hashids.encode(std::vector<int>{12345})
+auto hashids = Hashids("this is my salt", 8);
+id = hashids.encode(12345);
+```
+```id``` is going to be
+```
+B0NkK9A5
+```
+
+You can also pass several numbers
+```C++
+#include "Hashids.h"
+auto hashids = Hashids("this is my salt", 8);
+id = hashids.encode({1, 2, 3, 4, 5});
+```
+In this case ```id``` is going to be
+```
+zoHWuNhktp
 ```
