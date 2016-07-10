@@ -6,7 +6,7 @@
 C++11 port of a [JavaScript library](http://hashids.org/javascript/) to generate YouTube-like hashids from one or many numbers.
 
 ## Alpha
-This library is at the earliest stage of development and a support of new commands will be added soon. Currently it supports only ```encode``` command. Library is being developed and tested on Mac OS X 10.10.5.
+This library is at the earliest stage of development and is being developed and tested on Mac OS X 10.10.5.
 
 ## Requirements
 C++11 compatible compiler.
@@ -16,7 +16,7 @@ C++11 compatible compiler.
 ```C++
 #include "Hashids.h"
 auto hashids = Hashids("this is my salt", 8);
-std::string id = hashids.encode(12345);
+auto id = hashids.encode(12345);
 ```
 ```id``` is going to be
 ```
@@ -27,7 +27,7 @@ You can also pass several numbers
 ```C++
 #include "Hashids.h"
 auto hashids = Hashids("this is my salt", 8);
-std::string id = hashids.encode({1, 2, 3, 4, 5});
+auto id = hashids.encode({1, 2, 3, 4, 5});
 ```
 In this case ```id``` is going to be
 ```

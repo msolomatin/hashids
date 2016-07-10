@@ -18,12 +18,15 @@ private:
 
     std::string _consistentShuffle(std::string alphabet, std::string salt);
     std::string _encode(std::vector<int> numbers);
+    std::vector<int> _decode(std::string hash, std::string alphabet);
     std::string _hash(int input, std::string alphabet);
+    int _unhash(std::string input, std::string alphabet);
 
 public:
     Hashids(std::string salt, int minHashLength = 0, std::string alphabet = "");
     std::string encode(int number);
     std::string encode(std::initializer_list<int> numbers);
+    std::vector<int> decode(std::string hash);
 };
 
 #endif  // HASHIDS_H_

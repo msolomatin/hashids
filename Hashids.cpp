@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <initializer_list>
+#include <sstream>
 using std::cout;
 using std::endl;
 
@@ -87,6 +88,69 @@ std::string Hashids::_encode(std::vector<int> numbers) {
     return ret;
 }
 
+std::vector<int> Hashids::_decode(std::string hash, std::string alphabet) {
+    std::vector<int> ret;
+    int i = 0;
+    std::string hashBreakDown = hash;
+
+    for (int j = 0; j < _guards.length(); j++) {
+        int position = hashBreakDown.find(_guards[j]);
+        if (position != std::string::npos) {
+            std::replace(hashBreakDown.begin(), hashBreakDown.end(), _guards[j], ' ');
+        }
+    }
+
+    //hashBreakDown = hash;
+
+    std::stringstream ss(hashBreakDown);
+    std::string s;
+    std::vector<std::string> hashArray;
+    while (ss >> s) {
+        hashArray.push_back(s);
+    }
+
+    if (hashArray.size() == 3 || hashArray.size() == 2) {
+        i = 1;
+    }
+
+    hashBreakDown = hashArray[i];
+    std::string lottery, subHash, buffer;
+
+    if (hashBreakDown[0] != NULL) {
+        lottery = hashBreakDown[0];
+        hashBreakDown = hashBreakDown.substr(1);
+
+        for (int j = 0; j < _separators.length(); j++) {
+            int position = hashBreakDown.find(_separators[j]);
+            if (position != std::string::npos) {
+                std::replace(hashBreakDown.begin(), hashBreakDown.end(), _separators[j], ' ');
+            }
+        }
+
+        std::stringstream ss(hashBreakDown);
+        std::string s;
+        std::vector<std::string> hashArray;
+        while (ss >> s) {
+            hashArray.push_back(s);
+        }
+
+        for (int i = 0; i < hashArray.size(); i++) {
+            subHash = hashArray[i];
+            buffer = lottery + _salt + alphabet;
+
+            alphabet = _consistentShuffle(alphabet, buffer.substr(0, alphabet.length()));
+            ret.push_back(_unhash(subHash, alphabet));
+        }
+
+        if (_encode(ret) != hash) {
+            ret = {};
+        }
+
+    }
+
+    return ret;
+}
+
 std::string Hashids::_hash(int input, std::string alphabet) {
     std::string hash = "";
     int alphabetLength = alphabet.length();
@@ -99,6 +163,16 @@ std::string Hashids::_hash(int input, std::string alphabet) {
     return hash;
 }
 
+int Hashids::_unhash(std::string input, std::string alphabet) {
+    int number = 0, pos;
+
+    for (int i = 0; i < input.length(); i++) {
+        pos = alphabet.find(input[i]);
+        number += pos * pow(alphabet.length(), input.length() - i - 1);
+    }
+
+    return number;
+}
 
 Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
     _salt = salt;
@@ -169,11 +243,6 @@ std::string Hashids::encode(std::initializer_list<int> numbers) {
     return _encode(numbers);
 }
 
-int main() {
-    auto hashids = Hashids("this is my salt");
-
-    cout << hashids.encode(12345) << endl;
-    cout << hashids.encode({1, 2, 3, 4, 5}) << endl;
-
-    return 0;
+std::vector<int> Hashids::decode(std::string hash) {
+    return _decode(hash, _alphabet);
 }
