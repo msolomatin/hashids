@@ -8,7 +8,7 @@
 using std::cout;
 using std::endl;
 
-#include "Hashids.h"
+#include "../include/Hashids.h"
 
 std::string Hashids::_consistentShuffle(std::string alphabet, std::string salt) {
     int integer, j, i, v, p;

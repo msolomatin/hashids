@@ -35,7 +35,7 @@ install:
 script:
   - pwd
   - ls -la
-  - $CXX Hashids.h Hashids.cpp -std=c++11
+  - $CXX include/Hashids.h lib/Hashids.cpp main.cc -std=c++11
 
 branches:
   only:

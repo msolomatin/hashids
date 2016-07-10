@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-#include "Hashids.h"
+#include "include/Hashids.h"
 
 int main() {
     auto hashids = Hashids("this is my salt");
