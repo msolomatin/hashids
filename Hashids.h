@@ -9,7 +9,7 @@ class Hashids {
 private:
     std::string _alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     std::string _salt;
-    std::string _seps = "cfhistuCFHISTU";
+    std::string _separators = "cfhistuCFHISTU";
     int _minAlphabetLength = 16;
     double _sepDiv = 3.5;
     int _guardDiv = 12;

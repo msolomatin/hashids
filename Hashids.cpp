@@ -52,8 +52,8 @@ std::string Hashids::_encode(std::vector<int> numbers) {
 
         if (i + 1 < numbersSize) {
             number %= (static_cast<int>(last[0]) + i);
-            sepsIndex = number % _seps.length();
-            ret += _seps[sepsIndex];
+            sepsIndex = number % _separators.length();
+            ret += _separators[sepsIndex];
         }
     }
 
@@ -117,34 +117,34 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
     }
     _alphabet = uniqueAlphabet;
 
-    for (size_t i = 0; i < _seps.length(); i++) {
-        int j = _alphabet.find(_seps[i]);
+    for (size_t i = 0; i < _separators.length(); i++) {
+        int j = _alphabet.find(_separators[i]);
         if (j == std::string::npos) {
-            _seps = _seps.substr(0, i) + " " + _seps.substr(i + 1);
+            _separators = _separators.substr(0, i) + " " + _separators.substr(i + 1);
         } else {
             _alphabet = _alphabet.substr(0, j) + " " + _alphabet.substr(j + 1);
         }
     }
 
     _alphabet.erase(remove_if(_alphabet.begin(), _alphabet.end(), isspace), _alphabet.end());
-    _seps.erase(remove_if(_seps.begin(), _seps.end(), isspace), _seps.end());
+    _separators.erase(remove_if(_separators.begin(), _separators.end(), isspace), _separators.end());
 
-    _seps = _consistentShuffle(_seps, _salt);
+    _separators = _consistentShuffle(_separators, _salt);
 
-    if (!_seps.length() || (static_cast<double>(_alphabet.length()) / _seps.length()) > _sepDiv) {
+    if (!_separators.length() || (static_cast<double>(_alphabet.length()) / _separators.length()) > _sepDiv) {
         int sepsLength = ceil(static_cast<double>(_alphabet.length()) / _sepDiv);
 
         if (sepsLength == 1) {
             sepsLength++;
         }
 
-        if (sepsLength > _seps.length()) {
-            int diff = sepsLength - _seps.length();
-            _seps += _alphabet.substr(0, diff);
+        if (sepsLength > _separators.length()) {
+            int diff = sepsLength - _separators.length();
+            _separators += _alphabet.substr(0, diff);
             _alphabet = _alphabet.substr(diff);
 
         } else {
-            _seps = _seps.substr(0, sepsLength);
+            _separators = _separators.substr(0, sepsLength);
         }
     }
 
@@ -153,8 +153,8 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
     int guardCount = ceil(static_cast<double>(_alphabet.length()) / _guardDiv);
 
     if (_alphabet.length() < 3) {
-        _guards = _seps.substr(0, guardCount);
-        _seps = _seps.substr(guardCount);
+        _guards = _separators.substr(0, guardCount);
+        _separators = _separators.substr(guardCount);
     } else {
         _guards = _alphabet.substr(0, guardCount);
         _alphabet = _alphabet.substr(guardCount);
