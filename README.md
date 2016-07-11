@@ -9,7 +9,7 @@ C++11 port of a [JavaScript library](http://hashids.org/javascript/) to generate
 This library is at the earliest stage of development and is being developed and tested on Mac OS X 10.10.5.
 
 ## Requirements
-C++11 compatible compiler.
+C++11 compatible compiler (earlier C++ standards are not supported).
 
 ## Basic Example
 

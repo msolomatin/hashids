@@ -1,12 +1,9 @@
 #include <algorithm>
-#include <iostream>
 #include <string>
 #include <cmath>
 #include <vector>
 #include <initializer_list>
 #include <sstream>
-using std::cout;
-using std::endl;
 
 #include "../include/Hashids.h"
 
@@ -100,7 +97,7 @@ std::vector<int> Hashids::_decode(std::string hash, std::string alphabet) {
         }
     }
 
-    //hashBreakDown = hash;
+    // hashBreakDown = hash;
 
     std::stringstream ss(hashBreakDown);
     std::string s;
@@ -145,7 +142,6 @@ std::vector<int> Hashids::_decode(std::string hash, std::string alphabet) {
         if (_encode(ret) != hash) {
             ret = {};
         }
-
     }
 
     return ret;
@@ -200,12 +196,15 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
         }
     }
 
-    _alphabet.erase(remove_if(_alphabet.begin(), _alphabet.end(), isspace), _alphabet.end());
-    _separators.erase(remove_if(_separators.begin(), _separators.end(), isspace), _separators.end());
+    _alphabet.erase(remove_if(_alphabet.begin(), _alphabet.end(), isspace),
+        _alphabet.end());
+    _separators.erase(remove_if(_separators.begin(), _separators.end(),
+        isspace), _separators.end());
 
     _separators = _consistentShuffle(_separators, _salt);
 
-    if (!_separators.length() || (static_cast<double>(_alphabet.length()) / _separators.length()) > _sepDiv) {
+    if (!_separators.length() || (static_cast<double>(_alphabet.length()) /
+        _separators.length()) > _sepDiv) {
         int sepsLength = ceil(static_cast<double>(_alphabet.length()) / _sepDiv);
 
         if (sepsLength == 1) {
