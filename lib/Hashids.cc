@@ -164,7 +164,7 @@ int Hashids::_unhash(std::string input, std::string alphabet) {
 
     for (int i = 0; i < input.length(); i++) {
         pos = alphabet.find(input[i]);
-        number += pos * pow(alphabet.length(), input.length() - i - 1);
+        number += pos * std::pow(alphabet.length(), input.length() - i - 1);
     }
 
     return number;
@@ -205,7 +205,7 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
 
     if (!_separators.length() || (static_cast<double>(_alphabet.length()) /
         _separators.length()) > _sepDiv) {
-        int sepsLength = ceil(static_cast<double>(_alphabet.length()) / _sepDiv);
+        int sepsLength = std::ceil(static_cast<double>(_alphabet.length()) / _sepDiv);
 
         if (sepsLength == 1) {
             sepsLength++;
@@ -223,7 +223,7 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
 
     _alphabet = _consistentShuffle(_alphabet, _salt);
 
-    int guardCount = ceil(static_cast<double>(_alphabet.length()) / _guardDiv);
+    int guardCount = std::ceil(static_cast<double>(_alphabet.length()) / _guardDiv);
 
     if (_alphabet.length() < 3) {
         _guards = _separators.substr(0, guardCount);
