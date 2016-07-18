@@ -196,9 +196,9 @@ Hashids::Hashids(std::string salt, int minHashLength, std::string alphabet) {
         }
     }
 
-    _alphabet.erase(remove_if(_alphabet.begin(), _alphabet.end(), isspace),
+    _alphabet.erase(std::remove_if(_alphabet.begin(), _alphabet.end(), isspace),
         _alphabet.end());
-    _separators.erase(remove_if(_separators.begin(), _separators.end(),
+    _separators.erase(std::remove_if(_separators.begin(), _separators.end(),
         isspace), _separators.end());
 
     _separators = _consistentShuffle(_separators, _salt);
